@@ -44,9 +44,9 @@ xhr.onload = function () {
     backgroudMap.addLayer(markers);
 
     // 頁面其餘部分初始佈局
+    renderDateAndCondition();
     renderCountySelection();
     renderDistrictSelection();
-
 }
 
 // 函式：側邊攔伸縮
@@ -55,6 +55,30 @@ function collapseSideBar() {
 
     sideBar.classList.toggle('-show');
     direction.classList.toggle('-reverse');
+}
+
+// 函式：渲染日期與領貨條件
+function renderDateAndCondition() {
+    let toDay = new Date();
+    let year = toDay.getFullYear();
+    let month = toDay.getMonth();
+    let date = toDay.getDate();
+    let day = toDay.getDay();
+    let dateTitle = document.querySelector('#date')
+    let dayOfWeekTitle = document.querySelector('#dayOfWeek')
+    let condition = document.querySelector('#condition');
+    let dayInChineseArr = ['一', '二', '三', '四', '五', '六', '日'];
+
+    dateTitle.textContent = `${year}-${month + 1}-${date}`;
+    dayOfWeekTitle.textContent = `星期${dayInChineseArr[day - 1]}`;
+
+    if (day == 0) {
+        condition.innerHTML = '今日不限證號，皆可購買';
+    } else if (day % 2 == 0) {
+        condition.querySelector('span').textContent = '0，2，4，6，8';
+    } else {
+        condition.querySelector('span').textContent = '1，3，5，7，9';
+    }
 }
 
 // 函式：渲染縣市下拉選單
@@ -128,7 +152,6 @@ function switchSortButton(e) {
     sortFilterList(e.target.value, selectedSuppliersArr);
 }
 
-
 // 函式：更新清單排序
 function sortFilterList(sortBasis, suppliersArr) {
     filterList.innerHTML = '';
@@ -136,18 +159,15 @@ function sortFilterList(sortBasis, suppliersArr) {
 
     switch (sortBasis) {
         case '不指定':
-            console.log('不指定');
             arrCopy = suppliersArr;
             break;
         case '成人口罩':
-            console.log('成人口罩');
             arrCopy.sort(function (a, b) {
                 return b.maskAdult - a.maskAdult;
             });
             console.log(selectedSuppliersArr);
             break;
         case '兒童口罩':
-            console.log('兒童口罩');
             arrCopy.sort(function (a, b) {
                 return b.maskChild - a.maskChild;
             });
