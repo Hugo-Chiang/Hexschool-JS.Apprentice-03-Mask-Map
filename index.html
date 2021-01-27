@@ -18,13 +18,39 @@
 <body>
     <main>
         <div id="backgroudMap"></div>
-        <aside id="sideBar">
+        <aside id="sideBar" class="-show">
             <div id="collapseButton">
                 <div id="direction"></div>
             </div>
-            <div id="promptCover"></div>
-            <div id="filterBlock"></div>
-            <ul id="filterList"></ul>
+            <div id="promptCover">
+                <h5 id="date">2021-1-27</h5>
+                <h3 id="dayOfWeek">星期三</h3>
+                <div>身分證末碼為 1,3,5,7,9 可購買</div>
+                <div>※一週限購一次，每次一人限購兩片</div>
+            </div>
+            <div id="filterBlock">
+                <h4>區域篩選</h4>
+                <select name="" id="default" class="filterSelection">
+                    <option value="--請選擇城市--">--請選擇縣市--</option>
+                </select>
+                <select name="" id="districtSelection" class="filterSelection">
+                    <option value="default">--請選擇行政區--</option>
+                </select>
+                <h4>排序依據</h4>
+                <input type="button" value="所有口罩">
+                <input type="button" value="成人口罩">
+                <input type="button" value="兒童口罩">
+            </div>
+            <ul id="filterList">
+                <li class="supplier">
+                    <h3 class="supplierName">新安藥局</h3>
+                    <div class="supplierAddress">宜蘭縣五結鄉中正路１段１７０號１樓</div>
+                    <div class="supplierTel">連絡電話 : (03)9566377</div>
+                    <div>成人口罩2390個</div>
+                    <div>兒童口罩2390個</div>
+                    <input type="button" value="Google 路線導航">
+                </li>
+            </ul>
         </aside>
     </main>
 
