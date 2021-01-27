@@ -5,12 +5,79 @@
 }
 
 main {
+  background-color: #000000;
   width: 100vw;
   height: 100vh;
+  position: relative;
 }
 
 main #backgroudMap {
-  width: 100%;
+  width: inherit;
+  height: inherit;
+}
+
+main #sideBar {
+  width: 330px;
   height: 100%;
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 0;
+  left: -330px;
+  z-index: 9999;
+  -webkit-transition: left 1s;
+  transition: left 1s;
+}
+
+main #sideBar #collapseButton {
+  width: 25px;
+  height: 80px;
+  border-radius: 0px 10px 10px 0px;
+  background-color: green;
+  position: absolute;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+  top: 50%;
+  left: 100%;
+  cursor: pointer;
+}
+
+main #sideBar #collapseButton:hover {
+  width: 40px;
+  padding-left: 5px;
+}
+
+main #sideBar #collapseButton:active {
+  opacity: 0.8;
+}
+
+main #sideBar #collapseButton #direction {
+  border-left: 10px solid #FFFFFF;
+  border-top: 12px solid green;
+  border-bottom: 12px solid green;
+  display: inline-block;
+  -webkit-transition: border .7s;
+  transition: border .7s;
+  position: relative;
+  -webkit-transform: translate(0%, -50%);
+          transform: translate(0%, -50%);
+  top: 50%;
+  left: 25%;
+}
+
+main #sideBar #collapseButton #direction.-reverse {
+  border-left: none;
+  border-right: 10px solid #FFFFFF;
+  -webkit-transition: border .7s;
+  transition: border .7s;
+}
+
+main #sideBar #promptCover {
+  height: 175px;
+}
+
+main #sideBar.-show {
+  -webkit-transition: left 1s;
+  transition: left 1s;
+  left: 0;
 }
 /*# sourceMappingURL=all.css.map */

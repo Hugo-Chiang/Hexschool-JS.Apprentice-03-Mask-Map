@@ -1,10 +1,17 @@
+// 變數宣告
+const sideBar = document.querySelector('#sideBar');
+const collapseButton = document.querySelector('#collapseButton');
+
+// 監聽事件
+collapseButton.addEventListener('click', collapseSideBar);
+
 // Leaflet初始佈局
 let backgroudMap = L.map('backgroudMap').setView([25.0238087, 121.5531104], 20);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 }).addTo(backgroudMap);
 
-//Leaflet佈局地圖群組插件（透過新圖層）
+//Leaflet地圖群組插件（透過新圖層）
 let markers = new L.MarkerClusterGroup().addTo(backgroudMap);
 
 // XMLHttpRequest初始佈局
@@ -25,4 +32,12 @@ xhr.onload = function () {
         // }
     }
     backgroudMap.addLayer(markers);
+}
+
+// 函式：側邊攔伸縮
+function collapseSideBar() {
+    let direction = document.querySelector('#direction');
+
+    sideBar.classList.toggle('-show');
+    direction.classList.toggle('-reverse');
 }
