@@ -19,6 +19,7 @@ main #backgroudMap {
 main #sideBar {
   width: 330px;
   height: 100%;
+  overflow: scroll;
   background-color: #FFFFFF;
   position: absolute;
   top: 0;
