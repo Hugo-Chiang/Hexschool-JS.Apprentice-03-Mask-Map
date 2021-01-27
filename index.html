@@ -19,25 +19,22 @@
     <main>
         <div id="backgroudMap"></div>
         <aside id="sideBar" class="-show">
-            <div id="collapseButton">
-                <div id="direction"></div>
-            </div>
             <div id="promptCover">
-                <h5 id="date"></h5>
-                <h3 id="dayOfWeek"></h3>
+                <h4 id="date"></h4>
+                <h2 id="dayOfWeek"></h2>
                 <div id="condition">身分證末碼 <span></span> 者可購買</div>
-                <div>※一週限購一次，每次一人限購兩片</div>
+                <div id="limit">※ 一週限購一次，每次一人限購兩片</div>
             </div>
             <div id="filterBlock">
-                <h4>區域篩選</h4>
+                <h4>▌區域篩選</h4>
                 <select name="" id="countySelection" class="filterSelection">
                     <option value="default">--請選擇縣市--</option>
                 </select>
                 <select name="" id="districtSelection" class="filterSelection">
                     <option value="default">--請選擇行政區--</option>
                 </select>
-                <h4>排序依據</h4>
-                <input type="button" value="不指定" class="sortButton selected">
+                <h4>▌排序依據</h4>
+                <input type="button" value="不指定" class="sortButton -selected">
                 <input type="button" value="成人口罩" class="sortButton">
                 <input type="button" value="兒童口罩" class="sortButton">
             </div>
@@ -51,6 +48,9 @@
                 </li> -->
             </ul>
         </aside>
+        <div id="collapseButton">
+            <div id="direction"></div>
+        </div>
     </main>
 
     <!-- leaflet JS -->

@@ -28,7 +28,10 @@ let xhr = new XMLHttpRequest();
 xhr.open('get', 'https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json');
 xhr.send();
 
-// xhr讀取回應檔案後的行為
+// 頁面初始佈局（無需等待xhr部分）
+renderDateAndCondition();
+
+// xhr讀取回應完畢後之行為
 xhr.onload = function () {
     resArr = JSON.parse(xhr.responseText).features;
     console.log(resArr);
@@ -43,8 +46,7 @@ xhr.onload = function () {
     }
     backgroudMap.addLayer(markers);
 
-    // 頁面其餘部分初始佈局
-    renderDateAndCondition();
+    // 頁面初始佈局（需等待xhr部分）
     renderCountySelection();
     renderDistrictSelection();
 }
@@ -54,6 +56,7 @@ function collapseSideBar() {
     let direction = document.querySelector('#direction');
 
     sideBar.classList.toggle('-show');
+    collapseButton.classList.toggle('-extend');
     direction.classList.toggle('-reverse');
 }
 
@@ -146,8 +149,8 @@ function selectedDistrict() {
 function switchSortButton(e) {
     e.preventDefault();
 
-    sortButton.forEach((sortButton) => sortButton.classList.remove('selected'));
-    e.target.classList.add('selected');
+    sortButton.forEach((sortButton) => sortButton.classList.remove('-selected'));
+    e.target.classList.add('-selected');
 
     sortFilterList(e.target.value, selectedSuppliersArr);
 }
