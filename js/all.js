@@ -168,13 +168,11 @@ function sortFilterList(sortBasis, suppliersArr) {
             arrCopy.sort(function (a, b) {
                 return b.maskAdult - a.maskAdult;
             });
-            console.log(selectedSuppliersArr);
             break;
         case '兒童口罩':
             arrCopy.sort(function (a, b) {
                 return b.maskChild - a.maskChild;
             });
-            console.log(selectedSuppliersArr);
             break;
         default:
             break;
@@ -185,12 +183,22 @@ function sortFilterList(sortBasis, suppliersArr) {
     for (let i = 0; i < arrCopy.length; i++) {
         str += `
             <li class="supplier">
-                <h3 class="supplierName">${arrCopy[i].supplierName}</h3>
-                <div class="supplierAddress">${arrCopy[i].supplierAddress}</div>
-                <div class="supplierPhone">${arrCopy[i].supplierPhone}</div>
-                <div>成人口罩${arrCopy[i].maskAdult}個</div>
-                <div>兒童口罩${arrCopy[i].maskChild}個</div>
-            </li>`;
+                    <h3 class="supplierName">
+                        ${arrCopy[i].supplierName}
+                    </h3>
+                    <p class="supplierAddress">
+                        <img src="./img/maps-and-flags.png" alt="">
+                        ${arrCopy[i].supplierAddress}
+                    </p>
+                    <p class="supplierPhone">
+                        <img src="./img/telephone.png" alt="">
+                        ${arrCopy[i].supplierPhone}
+                    </p>
+                    <div class="maskQuantityBlock">
+                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${arrCopy[i].maskAdult}</span> 個</div>
+                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${arrCopy[i].maskChild}</span> 個</div>
+                    </div>
+                </li>`;
     }
     filterList.innerHTML = str;
 }

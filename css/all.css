@@ -67,7 +67,7 @@ main #sideBar #filterBlock {
   width: 100%;
   height: 210px;
   padding: 15px 10px;
-  border-bottom: .5px solid silver;
+  border-bottom: 2px solid darkgray;
 }
 
 main #sideBar #filterBlock h4 {
@@ -102,6 +102,7 @@ main #sideBar #filterBlock .sortButton {
   background-color: #FFFFFF;
   color: #CCCCCC;
   cursor: pointer;
+  margin-right: 3PX;
 }
 
 main #sideBar #filterBlock .sortButton:focus {
@@ -122,11 +123,81 @@ main #sideBar #filterList {
   padding: 0;
 }
 
-main #sideBar .supplier {
+main #sideBar #filterList .supplier {
   list-style: none;
   width: 100%;
   height: 160px;
-  border-bottom: .5px solid #707070;
+  padding: 10px;
+  border-bottom: .5px solid silver;
+}
+
+main #sideBar #filterList .supplier .supplierName {
+  margin: 5px 0px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+main #sideBar #filterList .supplier .supplierName:hover {
+  color: #d65600;
+}
+
+main #sideBar #filterList .supplier p {
+  width: 270px;
+  height: 25px;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  margin-bottom: 5px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main #sideBar #filterList .supplier p img {
+  height: 16px;
+  margin-right: 3px;
+  position: relative;
+  -webkit-transform: translate(0%, -50%);
+          transform: translate(0%, -50%);
+  top: 50%;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock {
+  margin-top: 8px;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock div {
+  display: inline-block;
+  width: 135px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 30px;
+  -webkit-box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.1);
+          box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.1);
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock div span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock .maskAdultRow {
+  background: rgba(255, 151, 59, 0.2) 0% 0% no-repeat padding-box;
+  margin-right: 5px;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock .maskAdultRow span {
+  color: darkred;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock .maskChildRow {
+  background: rgba(255, 219, 77, 0.2) 0% 0% no-repeat padding-box;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock .maskChildRow span {
+  color: darkgoldenrod;
 }
 
 main #sideBar.-show {
