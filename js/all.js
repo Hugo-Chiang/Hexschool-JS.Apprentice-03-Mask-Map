@@ -6,6 +6,7 @@ const districtSelection = document.querySelector('#districtSelection');
 const sortButton = document.querySelectorAll('.sortButton');
 let resArr = [];
 let selectedSuppliersArr = [];
+let userLocation = [];
 
 // 監聽事件
 collapseButton.addEventListener('click', collapseSideBar);
@@ -30,6 +31,7 @@ xhr.open('get', 'https://raw.githubusercontent.com/kiang/pharmacies/master/json/
 xhr.send();
 
 // 頁面初始佈局（無需等待xhr部分）
+navigator.geolocation.getCurrentPosition(getUserLocationSucess);
 renderDateAndCondition();
 
 // xhr讀取回應完畢後之行為
@@ -56,7 +58,9 @@ xhr.onload = function () {
                         <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${resArr[i].properties.mask_adult}</span> 個</div>
                         <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${resArr[i].properties.mask_child}</span> 個</div>
                     </div>
-                    <input type="button" value="Google路線導航">
+                    <a href="https://www.google.com/maps/dir/${userLocation.length == 0 ? '' : `${userLocation[0]},${userLocation[1]}`}/${resArr[i].properties.name}" target="_blank">
+                        <input type="button" value="Google路線導航">
+                    </a>
                 </li>`));
         // if () {
         //     makers.addLayer()
@@ -69,6 +73,11 @@ xhr.onload = function () {
     // 頁面初始佈局（需等待xhr部分）
     renderCountySelection();
     renderDistrictSelection();
+}
+
+// 函式：獲知使用者位置成功
+function getUserLocationSucess(location) {
+    userLocation = [location.coords.latitude, location.coords.longitude];
 }
 
 // 函式：側邊攔伸縮
@@ -136,6 +145,7 @@ function renderDistrictSelection() {
 // 函式：已選擇縣市
 function selectedCounty() {
     filterList.innerHTML = '';
+    if (countySelection.value == 'default' && districtSelection.value == 'default') backgroudMap.setView([25.0238087, 121.5531104], 20);
 }
 
 // 函式：已選擇行政區
@@ -165,7 +175,8 @@ function selectedDistrict() {
     }
 
     sortFilterList('不指定', selectedSuppliersArr);
-    backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
+
+    if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
 }
 
 // 函式：切換排序按鈕
@@ -225,7 +236,6 @@ function sortFilterList(sortBasis, suppliersArr) {
     }
     filterList.innerHTML = str;
 
-    backgroudMap.setView([copyArr[0].supplierLatitude, copyArr[0].supplierLongitude], 20);
-}
 
-// 函式：點擊Google導航
+    if (copyArr.length !== 0) backgroudMap.setView([copyArr[0].supplierLatitude, copyArr[0].supplierLongitude], 20);
+}

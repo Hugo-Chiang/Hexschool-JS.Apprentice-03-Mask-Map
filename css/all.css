@@ -91,7 +91,7 @@ main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .
   color: darkgoldenrod;
 }
 
-main #backgroudMap .leaflet-popup-content-wrapper .supplier input {
+main #backgroudMap .leaflet-popup-content-wrapper .supplier a input {
   width: 100%;
   height: 30px;
   background-color: #68af87;
@@ -100,10 +100,21 @@ main #backgroudMap .leaflet-popup-content-wrapper .supplier input {
   border: none;
   border-radius: 10px;
   line-height: 30px;
+  cursor: pointer;
 }
 
-main #backgroudMap .leaflet-popup-content-wrapper .supplier input:focus {
+main #backgroudMap .leaflet-popup-content-wrapper .supplier a input:focus {
   outline: none;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier a input:hover {
+  opacity: 0.8;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier a input:active {
+  font-size: 13px;
+  -webkit-box-shadow: inset 0px 0px 2px 3px rgba(0, 0, 0, 0.5);
+          box-shadow: inset 0px 0px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
 main #sideBar {
