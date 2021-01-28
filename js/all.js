@@ -4,11 +4,20 @@ const collapseButton = document.querySelector('#collapseButton');
 const countySelection = document.querySelector('#countySelection');
 const districtSelection = document.querySelector('#districtSelection');
 const sortButton = document.querySelectorAll('.sortButton');
+const filterList = document.querySelector('#filterList');
+let greyIcon = new L.Icon({
+    iconUrl: '../img/marker-icon-2x-grey.png',
+    shadowUrl: '../img/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 let resArr = [];
 let selectedSuppliersArr = [];
 let userLocation = [];
 
-// 監聽事件
+// 監聽事件（無需等待xhr部分）
 collapseButton.addEventListener('click', collapseSideBar);
 countySelection.addEventListener('change', renderDistrictSelection);
 countySelection.addEventListener('change', selectedCounty);
@@ -39,10 +48,16 @@ xhr.onload = function () {
     resArr = JSON.parse(xhr.responseText).features;
     console.log(resArr);
 
+    // resArr = resArr.slice(0, 1);
+    // resArr[0].properties.mask_adult = 0;
+    // resArr[0].properties.mask_child = 0;
+
     for (let i = 0; i < resArr.length; i++) {
-        markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]])
+        markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]],
+            (resArr[i].properties.mask_adult == 0 && resArr[i].properties.mask_child == 0) ? { icon: greyIcon, title: resArr[i].properties.id } : { title: resArr[i].properties.id })
             .bindPopup(`
-                <li class="supplier">
+                <li class="supplier" data-id="${resArr[i].properties.id}" data-name="${resArr[i].properties.name}" data-county="${resArr[i].properties.county}" 
+                data-district="${resArr[i].properties.town}" data-latitude="${resArr[i].geometry.coordinates[1]}" data-longitude="${resArr[i].geometry.coordinates[0]}"->
                     <h3 class="supplierName">
                     ${resArr[i].properties.name}
                     </h3>
@@ -55,24 +70,23 @@ xhr.onload = function () {
                         ${resArr[i].properties.phone}
                     </p>
                     <div class="maskQuantityBlock">
-                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${resArr[i].properties.mask_adult}</span> 個</div>
-                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${resArr[i].properties.mask_child}</span> 個</div>
+                        <div class="maskAdultRow ${resArr[i].properties.mask_adult == 0 ? '-soldOut' : ''}">成人口罩 <span class="maskAdultQuantity">${resArr[i].properties.mask_adult}</span> 個</div>
+                        <div class="maskChildRow ${resArr[i].properties.mask_child == 0 ? '-soldOut' : ''}">兒童口罩 <span class="maskChildQuantity">${resArr[i].properties.mask_child}</span> 個</div>
                     </div>
                     <a href="https://www.google.com/maps/dir/${userLocation.length == 0 ? '' : `${userLocation[0]},${userLocation[1]}`}/${resArr[i].properties.name}" target="_blank">
                         <input type="button" value="Google路線導航">
                     </a>
                 </li>`));
-        // if () {
-        //     makers.addLayer()
-        // } else {
-
-        // }
     }
     backgroudMap.addLayer(markers);
 
     // 頁面初始佈局（需等待xhr部分）
     renderCountySelection();
     renderDistrictSelection();
+
+    // 監聽事件（需等待xhr部分）
+    filterList.addEventListener('click', selectedSupplier);
+    document.addEventListener('click', selectedMarker);
 }
 
 // 函式：獲知使用者位置成功
@@ -163,6 +177,9 @@ function selectedDistrict() {
             let selectedSupplier = {
                 supplierLatitude: resArr[i].geometry.coordinates[1],
                 supplierLongitude: resArr[i].geometry.coordinates[0],
+                supplierId: resArr[i].properties.id,
+                supplierCounty: resArr[i].properties.county,
+                supplierDistrict: resArr[i].properties.town,
                 supplierName: resArr[i].properties.name,
                 supplierAddress: resArr[i].properties.address,
                 supplierPhone: resArr[i].properties.phone,
@@ -177,6 +194,56 @@ function selectedDistrict() {
     sortFilterList('不指定', selectedSuppliersArr);
 
     if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
+}
+
+// 函式：已選擇特定供應商
+function selectedSupplier(e) {
+    console.log(selectedSuppliersArr);
+
+    if (e.target.classList.contains('supplierName')) {
+        let supplierItem = e.target.closest('li.supplier');
+
+        for (let i = 0; i < selectedSuppliersArr.length; i++) {
+            if (supplierItem.dataset.id == selectedSuppliersArr[i].supplierId) {
+                backgroudMap.setView([selectedSuppliersArr[i].supplierLatitude, selectedSuppliersArr[i].supplierLongitude], 20);
+
+                let markersPane = document.querySelectorAll('div.leaflet-marker-pane')[0];
+                let markerClusters = markersPane.querySelectorAll('div.marker-cluster');
+                let markersGenerated = markersPane.querySelectorAll('img.leaflet-marker-icon');
+
+                console.log(markersPane);
+                console.log(markerClusters);
+                console.log(markersGenerated);
+
+                for (let j = 0; j < markersGenerated.length; j++) {
+                    if (supplierItem.dataset.id == markersGenerated[j].title) markersGenerated[j].click();
+                }
+
+                searchingInClusters:
+                for (let j = 0; j < markerClusters.length; j++) {
+                    markerClusters[j].click();
+                    let markersGenerated = markersPane.querySelectorAll('img.leaflet-marker-icon');
+
+                    for (let k = 0; k < markersGenerated.length; k++) {
+                        if (supplierItem.dataset.id == markersGenerated[k].title) {
+                            markersGenerated[k].click();
+                            break searchingInClusters;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 函式：已選擇特定圖釘
+function selectedMarker(e) {
+    if (e.target.classList.contains('img.leaflet-marker-icon')) {
+        // console.log(`hello there, i am ${e.target.title}`);
+
+
+
+    }
 }
 
 // 函式：切換排序按鈕
@@ -216,7 +283,8 @@ function sortFilterList(sortBasis, suppliersArr) {
 
     for (let i = 0; i < copyArr.length; i++) {
         str += `
-                <li class="supplier">
+                <li class="supplier" data-id="${copyArr[i].supplierId}"  data-name="${copyArr[i].supplierName}" data-county="${copyArr[i].supplierCounty}" 
+                data-district="${copyArr[i].supplierDistrict}" data-latitude="${copyArr[i].supplierLatitude}" data-longitude="${copyArr[i].supplierLongitude}">
                     <h3 class="supplierName">
                         ${copyArr[i].supplierName}
                     </h3>
@@ -229,8 +297,8 @@ function sortFilterList(sortBasis, suppliersArr) {
                         ${copyArr[i].supplierPhone}
                     </p>
                     <div class="maskQuantityBlock">
-                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${copyArr[i].maskAdult}</span> 個</div>
-                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${copyArr[i].maskChild}</span> 個</div>
+                        <div class="maskAdultRow ${copyArr[i].maskAdult == 0 ? '-soldOut' : ''}">成人口罩 <span class="maskAdultQuantity">${copyArr[i].maskAdult}</span> 個</div>
+                        <div class="maskChildRow ${copyArr[i].maskChild == 0 ? '-soldOut' : ''}">兒童口罩 <span class="maskChildQuantity">${copyArr[i].maskChild}</span> 個</div>
                     </div>
                 </li>`;
     }

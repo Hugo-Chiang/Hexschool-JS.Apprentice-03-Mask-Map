@@ -74,6 +74,15 @@ main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock d
   font-weight: 700;
 }
 
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock div.-soldOut {
+  background-color: darkgray;
+  color: gray;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock div.-soldOut span {
+  color: #FFFFFF;
+}
+
 main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .maskAdultRow {
   background: rgba(255, 151, 59, 0.2) 0% 0% no-repeat padding-box;
   margin-right: 5px;
@@ -282,6 +291,15 @@ main #sideBar #filterList .supplier .maskQuantityBlock div {
 main #sideBar #filterList .supplier .maskQuantityBlock div span {
   font-size: 16px;
   font-weight: 700;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock div.-soldOut {
+  background-color: darkgray;
+  color: gray;
+}
+
+main #sideBar #filterList .supplier .maskQuantityBlock div.-soldOut span {
+  color: #FFFFFF;
 }
 
 main #sideBar #filterList .supplier .maskQuantityBlock .maskAdultRow {
