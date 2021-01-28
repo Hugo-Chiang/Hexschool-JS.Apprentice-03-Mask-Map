@@ -16,6 +16,96 @@ main #backgroudMap {
   height: inherit;
 }
 
+main #backgroudMap .leaflet-popup-content-wrapper {
+  width: 320px;
+  height: 205px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier {
+  list-style: none;
+  width: 100%;
+  height: 175px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .supplierName {
+  margin: 5px 0px 10px;
+  font-size: 16px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier p {
+  width: 270px;
+  height: 25px;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  margin: 0px 0px 5px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier p img {
+  height: 16px;
+  margin-right: 3px;
+  position: relative;
+  -webkit-transform: translate(0%, -50%);
+          transform: translate(0%, -50%);
+  top: 50%;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock {
+  margin-top: 8px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock div {
+  display: inline-block;
+  width: 135px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 30px;
+  -webkit-box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.1);
+          box-shadow: 1px 1px 0px 1px rgba(0, 0, 0, 0.1);
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock div span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .maskAdultRow {
+  background: rgba(255, 151, 59, 0.2) 0% 0% no-repeat padding-box;
+  margin-right: 5px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .maskAdultRow span {
+  color: darkred;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .maskChildRow {
+  background: rgba(255, 219, 77, 0.2) 0% 0% no-repeat padding-box;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier .maskQuantityBlock .maskChildRow span {
+  color: darkgoldenrod;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier input {
+  width: 100%;
+  height: 30px;
+  background-color: #68af87;
+  color: #FFFFFF;
+  margin-top: 15px;
+  border: none;
+  border-radius: 10px;
+  line-height: 30px;
+}
+
+main #backgroudMap .leaflet-popup-content-wrapper .supplier input:focus {
+  outline: none;
+}
+
 main #sideBar {
   width: 330px;
   height: 100%;

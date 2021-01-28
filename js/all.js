@@ -15,7 +15,8 @@ districtSelection.addEventListener('change', selectedDistrict);
 sortButton.forEach(button => button.addEventListener('click', switchSortButton));
 
 // Leaflet初始佈局
-let backgroudMap = L.map('backgroudMap').setView([25.0238087, 121.5531104], 20);
+let backgroudMap = L.map('backgroudMap');
+backgroudMap.setView([25.0238087, 121.5531104], 20);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 }).addTo(backgroudMap);
@@ -37,7 +38,26 @@ xhr.onload = function () {
     console.log(resArr);
 
     for (let i = 0; i < resArr.length; i++) {
-        markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]]).bindPopup(`<h2>${resArr[i].properties.name}</h2>`));
+        markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]])
+            .bindPopup(`
+                <li class="supplier">
+                    <h3 class="supplierName">
+                    ${resArr[i].properties.name}
+                    </h3>
+                    <p class="supplierAddress">
+                        <img src="./img/maps-and-flags.png" alt="">
+                        ${resArr[i].properties.address}
+                    </p>
+                    <p class="supplierPhone">
+                        <img src="./img/telephone.png" alt="">
+                        ${resArr[i].properties.phone}
+                    </p>
+                    <div class="maskQuantityBlock">
+                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${resArr[i].properties.mask_adult}</span> 個</div>
+                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${resArr[i].properties.mask_child}</span> 個</div>
+                    </div>
+                    <input type="button" value="Google路線導航">
+                </li>`));
         // if () {
         //     makers.addLayer()
         // } else {
@@ -131,6 +151,8 @@ function selectedDistrict() {
 
         if (selectedDistrict == town) {
             let selectedSupplier = {
+                supplierLatitude: resArr[i].geometry.coordinates[1],
+                supplierLongitude: resArr[i].geometry.coordinates[0],
                 supplierName: resArr[i].properties.name,
                 supplierAddress: resArr[i].properties.address,
                 supplierPhone: resArr[i].properties.phone,
@@ -143,6 +165,7 @@ function selectedDistrict() {
     }
 
     sortFilterList('不指定', selectedSuppliersArr);
+    backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
 }
 
 // 函式：切換排序按鈕
@@ -158,19 +181,19 @@ function switchSortButton(e) {
 // 函式：更新清單排序
 function sortFilterList(sortBasis, suppliersArr) {
     filterList.innerHTML = '';
-    let arrCopy = suppliersArr.slice();
+    let copyArr = suppliersArr.slice();
 
     switch (sortBasis) {
         case '不指定':
-            arrCopy = suppliersArr;
+            copyArr = suppliersArr;
             break;
         case '成人口罩':
-            arrCopy.sort(function (a, b) {
+            copyArr.sort(function (a, b) {
                 return b.maskAdult - a.maskAdult;
             });
             break;
         case '兒童口罩':
-            arrCopy.sort(function (a, b) {
+            copyArr.sort(function (a, b) {
                 return b.maskChild - a.maskChild;
             });
             break;
@@ -180,27 +203,29 @@ function sortFilterList(sortBasis, suppliersArr) {
 
     let str = '';
 
-    for (let i = 0; i < arrCopy.length; i++) {
+    for (let i = 0; i < copyArr.length; i++) {
         str += `
-            <li class="supplier">
+                <li class="supplier">
                     <h3 class="supplierName">
-                        ${arrCopy[i].supplierName}
+                        ${copyArr[i].supplierName}
                     </h3>
                     <p class="supplierAddress">
                         <img src="./img/maps-and-flags.png" alt="">
-                        ${arrCopy[i].supplierAddress}
+                        ${copyArr[i].supplierAddress}
                     </p>
                     <p class="supplierPhone">
                         <img src="./img/telephone.png" alt="">
-                        ${arrCopy[i].supplierPhone}
+                        ${copyArr[i].supplierPhone}
                     </p>
                     <div class="maskQuantityBlock">
-                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${arrCopy[i].maskAdult}</span> 個</div>
-                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${arrCopy[i].maskChild}</span> 個</div>
+                        <div class="maskAdultRow">成人口罩 <span class="maskAdultQuantity">${copyArr[i].maskAdult}</span> 個</div>
+                        <div class="maskChildRow">兒童口罩 <span class="maskChildQuantity">${copyArr[i].maskChild}</span> 個</div>
                     </div>
                 </li>`;
     }
     filterList.innerHTML = str;
+
+    backgroudMap.setView([copyArr[0].supplierLatitude, copyArr[0].supplierLongitude], 20);
 }
 
 // 函式：點擊Google導航
