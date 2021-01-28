@@ -45,13 +45,10 @@ renderDateAndCondition();
 
 // xhr讀取回應完畢後之行為
 xhr.onload = function () {
+    // 解析回傳資料並裝入陣列
     resArr = JSON.parse(xhr.responseText).features;
-    console.log(resArr);
 
-    // resArr = resArr.slice(0, 1);
-    // resArr[0].properties.mask_adult = 0;
-    // resArr[0].properties.mask_child = 0;
-
+    // 根據回傳資料於Leaflet放置圖釘
     for (let i = 0; i < resArr.length; i++) {
         markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]],
             (resArr[i].properties.mask_adult == 0 && resArr[i].properties.mask_child == 0) ? { icon: greyIcon, title: resArr[i].properties.id } : { title: resArr[i].properties.id })
@@ -156,24 +153,33 @@ function renderDistrictSelection() {
     }
 }
 
-// 函式：已選擇縣市
+// 函式：下拉選單選擇縣市
 function selectedCounty() {
     filterList.innerHTML = '';
     if (countySelection.value == 'default' && districtSelection.value == 'default') backgroudMap.setView([25.0238087, 121.5531104], 20);
 }
 
-// 函式：已選擇行政區
+// 函式：下拉選單選擇行政區
 function selectedDistrict() {
     filterList.innerHTML = '';
 
     let selectedDistrict = districtSelection.value;
+    updateSuppliersList(selectedDistrict);
+
+    sortFilterList('不指定', selectedSuppliersArr);
+
+    if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
+}
+
+// 函式：根據所選行政區更新所選供應商清單
+function updateSuppliersList(district) {
 
     selectedSuppliersArr = [];
 
     for (let i = 0; i < resArr.length; i++) {
         let town = resArr[i].properties.town;
 
-        if (selectedDistrict == town) {
+        if (district == town) {
             let selectedSupplier = {
                 supplierLatitude: resArr[i].geometry.coordinates[1],
                 supplierLongitude: resArr[i].geometry.coordinates[0],
@@ -190,16 +196,10 @@ function selectedDistrict() {
             selectedSuppliersArr.push(selectedSupplier);
         }
     }
-
-    sortFilterList('不指定', selectedSuppliersArr);
-
-    if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
 }
 
-// 函式：已選擇特定供應商
+// 函式：側邊欄選擇特定供應商
 function selectedSupplier(e) {
-    console.log(selectedSuppliersArr);
-
     if (e.target.classList.contains('supplierName')) {
         let supplierItem = e.target.closest('li.supplier');
 
@@ -210,10 +210,6 @@ function selectedSupplier(e) {
                 let markersPane = document.querySelectorAll('div.leaflet-marker-pane')[0];
                 let markerClusters = markersPane.querySelectorAll('div.marker-cluster');
                 let markersGenerated = markersPane.querySelectorAll('img.leaflet-marker-icon');
-
-                console.log(markersPane);
-                console.log(markerClusters);
-                console.log(markersGenerated);
 
                 for (let j = 0; j < markersGenerated.length; j++) {
                     if (supplierItem.dataset.id == markersGenerated[j].title) markersGenerated[j].click();
@@ -236,13 +232,24 @@ function selectedSupplier(e) {
     }
 }
 
-// 函式：已選擇特定圖釘
+// 函式：地圖上選擇特定圖釘
 function selectedMarker(e) {
-    if (e.target.classList.contains('img.leaflet-marker-icon')) {
-        // console.log(`hello there, i am ${e.target.title}`);
+    if (e.target.classList.contains('leaflet-marker-icon')) {
+        for (let i = 0; i < resArr.length; i++) {
+            if (e.target.title == resArr[i].properties.id) {
+                countySelection.value = resArr[i].properties.county;
+                renderDistrictSelection();
+                districtSelection.value = resArr[i].properties.town;
+                updateSuppliersList(districtSelection.value);
+                let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
 
-
-
+                for (let j = 0; j < sortedArr.length; j++) {
+                    if (e.target.title == sortedArr[j].supplierId) {
+                        filterList.scroll(0, j * 160);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -253,7 +260,11 @@ function switchSortButton(e) {
     sortButton.forEach((sortButton) => sortButton.classList.remove('-selected'));
     e.target.classList.add('-selected');
 
-    sortFilterList(e.target.value, selectedSuppliersArr);
+    let sortedArr = sortFilterList(e.target.value, selectedSuppliersArr);
+
+    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[0].supplierLatitude, sortedArr[0].supplierLongitude], 20);
+
+    sortedArr = [];
 }
 
 // 函式：更新清單排序
@@ -303,7 +314,7 @@ function sortFilterList(sortBasis, suppliersArr) {
                 </li>`;
     }
     filterList.innerHTML = str;
+    filterList.scroll(0, 0);
 
-
-    if (copyArr.length !== 0) backgroudMap.setView([copyArr[0].supplierLatitude, copyArr[0].supplierLongitude], 20);
+    return copyArr;
 }

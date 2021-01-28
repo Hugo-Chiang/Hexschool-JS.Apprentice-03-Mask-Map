@@ -129,7 +129,6 @@ main #backgroudMap .leaflet-popup-content-wrapper .supplier a input:active {
 main #sideBar {
   width: 330px;
   height: 100%;
-  overflow-y: scroll;
   background-color: #FFFFFF;
   position: absolute;
   top: 0;
@@ -144,6 +143,7 @@ main #sideBar #promptCover {
   height: 135px;
   background-image: url("/img/img_bg_orange.svg");
   padding: 10px;
+  border-right: 1px solid darkgray;
 }
 
 main #sideBar #promptCover h4, main #sideBar #promptCover h2 {
@@ -177,7 +177,8 @@ main #sideBar #filterBlock {
   width: 100%;
   height: 210px;
   padding: 15px 10px;
-  border-bottom: 2px solid darkgray;
+  border-right: 1px solid darkgray;
+  border-bottom: 1px solid darkgray;
 }
 
 main #sideBar #filterBlock h4 {
@@ -230,7 +231,9 @@ main #sideBar #filterBlock .sortButton.-selected {
 }
 
 main #sideBar #filterList {
+  height: calc(100vh - 135px - 210px);
   padding: 0;
+  overflow-y: scroll;
 }
 
 main #sideBar #filterList .supplier {
