@@ -5,6 +5,34 @@ const countySelection = document.querySelector('#countySelection');
 const districtSelection = document.querySelector('#districtSelection');
 const sortButton = document.querySelectorAll('.sortButton');
 const filterList = document.querySelector('#filterList');
+
+let blueIcon = new L.Icon({
+    iconUrl: '../img/marker-icon-blue.png',
+    shadowUrl: '../img/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+let redIcon = new L.Icon({
+    iconUrl: '../img/marker-icon-2x-red.png',
+    shadowUrl: '../img/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+let yellowIcon = new L.Icon({
+    iconUrl: '../img/marker-icon-2x-yellow.png',
+    shadowUrl: '../img/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
 let greyIcon = new L.Icon({
     iconUrl: '../img/marker-icon-2x-grey.png',
     shadowUrl: '../img/marker-shadow.png',
@@ -13,6 +41,7 @@ let greyIcon = new L.Icon({
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
 });
+
 let resArr = [];
 let selectedSuppliersArr = [];
 let userLocation = [];
@@ -26,7 +55,7 @@ sortButton.forEach(button => button.addEventListener('click', switchSortButton))
 
 // Leaflet初始佈局
 let backgroudMap = L.map('backgroudMap');
-// backgroudMap.setView([25.0238087, 121.5531104], 18);
+backgroudMap.setView([25.0238087, 121.5531104], 18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 }).addTo(backgroudMap);
@@ -51,7 +80,9 @@ xhr.onload = function () {
     // 根據回傳資料於Leaflet放置圖釘
     for (let i = 0; i < resArr.length; i++) {
         markers.addLayer(L.marker([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]],
-            (resArr[i].properties.mask_adult == 0 && resArr[i].properties.mask_child == 0) ? { icon: greyIcon, title: resArr[i].properties.id } : { title: resArr[i].properties.id })
+            (resArr[i].properties.mask_adult == 0 && resArr[i].properties.mask_child == 0) ? { icon: greyIcon, title: resArr[i].properties.id } :
+                (resArr[i].properties.mask_adult != 0 && resArr[i].properties.mask_child != 0) ? { icon: blueIcon, title: resArr[i].properties.id } :
+                    (resArr[i].properties.mask_adult !== 0 && resArr[i].properties.mask_child == 0) ? { icon: yellowIcon, title: resArr[i].properties.id } : { icon: redIcon, title: resArr[i].properties.id })
             .bindPopup(`
                 <li class="supplier" data-id="${resArr[i].properties.id}" data-name="${resArr[i].properties.name}" data-county="${resArr[i].properties.county}" 
                 data-district="${resArr[i].properties.town}" data-latitude="${resArr[i].geometry.coordinates[1]}" data-longitude="${resArr[i].geometry.coordinates[0]}"->
@@ -81,14 +112,14 @@ xhr.onload = function () {
     renderCountySelection();
     renderDistrictSelection();
 
-    // 測試用初始佈局，正式版應刪除
-    countySelection.value = '臺東縣';
-    renderDistrictSelection();
-    districtSelection.value = '臺東市';
-    updateSuppliersList('臺東市');
-    let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
-    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[2].supplierLatitude, sortedArr[2].supplierLongitude], 18);
-    sideBar.classList.add('-show');
+    // 測試用初始佈局，正式版應註解或刪除
+    // countySelection.value = '臺東縣';
+    // renderDistrictSelection();
+    // districtSelection.value = '臺東市';
+    // updateSuppliersList('臺東市');
+    // let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
+    // if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[2].supplierLatitude, sortedArr[2].supplierLongitude], 18);
+    // sideBar.classList.add('-show');
 
     // 監聽事件（需等待xhr部分）
     filterList.addEventListener('click', selectedSupplier);
@@ -182,7 +213,6 @@ function selectedDistrict() {
 
 // 函式：根據所選行政區更新所選供應商清單
 function updateSuppliersList(district) {
-
     selectedSuppliersArr = [];
 
     for (let i = 0; i < resArr.length; i++) {
