@@ -26,13 +26,13 @@ sortButton.forEach(button => button.addEventListener('click', switchSortButton))
 
 // Leaflet初始佈局
 let backgroudMap = L.map('backgroudMap');
-backgroudMap.setView([25.0238087, 121.5531104], 20);
+// backgroudMap.setView([25.0238087, 121.5531104], 18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 }).addTo(backgroudMap);
 
 //Leaflet地圖群組插件（透過新圖層）
-let markers = new L.MarkerClusterGroup().addTo(backgroudMap);
+let markers = new L.MarkerClusterGroup({ disableClusteringAtZoom: 18 }).addTo(backgroudMap);
 
 // XMLHttpRequest初始佈局
 let xhr = new XMLHttpRequest();
@@ -80,6 +80,15 @@ xhr.onload = function () {
     // 頁面初始佈局（需等待xhr部分）
     renderCountySelection();
     renderDistrictSelection();
+
+    // 測試用初始佈局，正式版應刪除
+    countySelection.value = '臺東縣';
+    renderDistrictSelection();
+    districtSelection.value = '臺東市';
+    updateSuppliersList('臺東市');
+    let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
+    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[2].supplierLatitude, sortedArr[2].supplierLongitude], 18);
+    sideBar.classList.add('-show');
 
     // 監聽事件（需等待xhr部分）
     filterList.addEventListener('click', selectedSupplier);
@@ -156,7 +165,7 @@ function renderDistrictSelection() {
 // 函式：下拉選單選擇縣市
 function selectedCounty() {
     filterList.innerHTML = '';
-    if (countySelection.value == 'default' && districtSelection.value == 'default') backgroudMap.setView([25.0238087, 121.5531104], 20);
+    if (countySelection.value == 'default' && districtSelection.value == 'default') backgroudMap.setView([25.0238087, 121.5531104], 18);
 }
 
 // 函式：下拉選單選擇行政區
@@ -168,7 +177,7 @@ function selectedDistrict() {
 
     sortFilterList('不指定', selectedSuppliersArr);
 
-    if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 20);
+    if (selectedSuppliersArr.length !== 0) backgroudMap.setView([selectedSuppliersArr[0].supplierLatitude, selectedSuppliersArr[0].supplierLongitude], 18);
 }
 
 // 函式：根據所選行政區更新所選供應商清單
@@ -201,31 +210,21 @@ function updateSuppliersList(district) {
 // 函式：側邊欄選擇特定供應商
 function selectedSupplier(e) {
     if (e.target.classList.contains('supplierName')) {
+        let listBoost = document.querySelector('#listBoost')
         let supplierItem = e.target.closest('li.supplier');
+
+        if (!!listBoost) listBoost.remove();
 
         for (let i = 0; i < selectedSuppliersArr.length; i++) {
             if (supplierItem.dataset.id == selectedSuppliersArr[i].supplierId) {
-                backgroudMap.setView([selectedSuppliersArr[i].supplierLatitude, selectedSuppliersArr[i].supplierLongitude], 20);
+                backgroudMap.setView([selectedSuppliersArr[i].supplierLatitude, selectedSuppliersArr[i].supplierLongitude], 18);
+                topTheSupplier(i);
 
                 let markersPane = document.querySelectorAll('div.leaflet-marker-pane')[0];
-                let markerClusters = markersPane.querySelectorAll('div.marker-cluster');
                 let markersGenerated = markersPane.querySelectorAll('img.leaflet-marker-icon');
 
-                for (let j = 0; j < markersGenerated.length; j++) {
-                    if (supplierItem.dataset.id == markersGenerated[j].title) markersGenerated[j].click();
-                }
-
-                searchingInClusters:
-                for (let j = 0; j < markerClusters.length; j++) {
-                    markerClusters[j].click();
-                    let markersGenerated = markersPane.querySelectorAll('img.leaflet-marker-icon');
-
-                    for (let k = 0; k < markersGenerated.length; k++) {
-                        if (supplierItem.dataset.id == markersGenerated[k].title) {
-                            markersGenerated[k].click();
-                            break searchingInClusters;
-                        }
-                    }
+                for (let i = 0; i < markersGenerated.length; i++) {
+                    if (supplierItem.dataset.id == markersGenerated[i].title) markersGenerated[i].click();
                 }
             }
         }
@@ -244,9 +243,7 @@ function selectedMarker(e) {
                 let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
 
                 for (let j = 0; j < sortedArr.length; j++) {
-                    if (e.target.title == sortedArr[j].supplierId) {
-                        filterList.scroll(0, j * 160);
-                    }
+                    if (e.target.title == sortedArr[j].supplierId) topTheSupplier(j);
                 }
             }
         }
@@ -262,7 +259,7 @@ function switchSortButton(e) {
 
     let sortedArr = sortFilterList(e.target.value, selectedSuppliersArr);
 
-    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[0].supplierLatitude, sortedArr[0].supplierLongitude], 20);
+    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[0].supplierLatitude, sortedArr[0].supplierLongitude], 18);
 
     sortedArr = [];
 }
@@ -317,4 +314,25 @@ function sortFilterList(sortBasis, suppliersArr) {
     filterList.scroll(0, 0);
 
     return copyArr;
+}
+
+// 函式：置頂所選供應商
+function topTheSupplier(scrollQuantity) {
+    let SuppliersQuantity = selectedSuppliersArr.length + 1;
+    let scrollHeight = scrollQuantity * 160;
+
+    console.log(SuppliersQuantity - scrollQuantity);
+
+    if (SuppliersQuantity - scrollQuantity < 5) {
+        let boostQuantity = Math.abs(SuppliersQuantity - scrollQuantity - 1 - 4);
+        let boostDOM = document.createElement('li');
+
+        boostDOM.setAttribute('id', 'listBoost');
+        boostDOM.style.width = '100%';
+        boostDOM.style.height = `${boostQuantity * 160}px`;
+
+        filterList.insertAdjacentElement('beforeend', boostDOM)
+    }
+
+    filterList.scroll(0, scrollHeight);
 }
