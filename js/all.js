@@ -7,8 +7,8 @@ const sortButton = document.querySelectorAll('.sortButton');
 const filterList = document.querySelector('#filterList');
 
 let blueIcon = new L.Icon({
-    iconUrl: '../img/marker-icon-blue.png',
-    shadowUrl: '../img/marker-shadow.png',
+    iconUrl: './img/marker-icon-blue.png',
+    shadowUrl: './img/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -16,8 +16,8 @@ let blueIcon = new L.Icon({
 });
 
 let redIcon = new L.Icon({
-    iconUrl: '../img/marker-icon-2x-red.png',
-    shadowUrl: '../img/marker-shadow.png',
+    iconUrl: './img/marker-icon-2x-red.png',
+    shadowUrl: './img/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -25,8 +25,8 @@ let redIcon = new L.Icon({
 });
 
 let yellowIcon = new L.Icon({
-    iconUrl: '../img/marker-icon-2x-yellow.png',
-    shadowUrl: '../img/marker-shadow.png',
+    iconUrl: './img/marker-icon-2x-yellow.png',
+    shadowUrl: './img/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -34,8 +34,8 @@ let yellowIcon = new L.Icon({
 });
 
 let greyIcon = new L.Icon({
-    iconUrl: '../img/marker-icon-2x-grey.png',
-    shadowUrl: '../img/marker-shadow.png',
+    iconUrl: './img/marker-icon-2x-grey.png',
+    shadowUrl: './img/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
