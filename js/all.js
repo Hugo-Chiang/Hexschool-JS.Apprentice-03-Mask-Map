@@ -287,9 +287,10 @@ function switchSortButton(e) {
     sortButton.forEach((sortButton) => sortButton.classList.remove('-selected'));
     e.target.classList.add('-selected');
 
-    let sortedArr = sortFilterList(e.target.value, selectedSuppliersArr);
-
-    if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[0].supplierLatitude, sortedArr[0].supplierLongitude], 18);
+    if (countySelection.value != 'default' && districtSelection.value != 'default') {
+        let sortedArr = sortFilterList(e.target.value, selectedSuppliersArr);
+        if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[0].supplierLatitude, sortedArr[0].supplierLongitude], 18);
+    }
 
     sortedArr = [];
 }
