@@ -272,6 +272,8 @@ function selectedMarker(e) {
                 updateSuppliersList(districtSelection.value);
                 let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
 
+                backgroudMap.setView([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]], 18);
+
                 for (let j = 0; j < sortedArr.length; j++) {
                     if (e.target.title == sortedArr[j].supplierId) topTheSupplier(j);
                 }
