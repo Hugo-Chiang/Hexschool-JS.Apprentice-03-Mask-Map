@@ -112,15 +112,6 @@ xhr.onload = function () {
     renderCountySelection();
     renderDistrictSelection();
 
-    // 測試用初始佈局，正式版應註解或刪除
-    // countySelection.value = '臺東縣';
-    // renderDistrictSelection();
-    // districtSelection.value = '臺東市';
-    // updateSuppliersList('臺東市');
-    // let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
-    // if (sortedArr.length !== 0) backgroudMap.setView([sortedArr[2].supplierLatitude, sortedArr[2].supplierLongitude], 18);
-    // sideBar.classList.add('-show');
-
     // 監聽事件（需等待xhr部分）
     filterList.addEventListener('click', selectedSupplier);
     document.addEventListener('click', selectedMarker);
