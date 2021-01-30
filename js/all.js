@@ -347,8 +347,6 @@ function topTheSupplier(scrollQuantity) {
     let SuppliersQuantity = selectedSuppliersArr.length + 1;
     let scrollHeight = scrollQuantity * 160;
 
-    console.log(SuppliersQuantity - scrollQuantity);
-
     if (SuppliersQuantity - scrollQuantity < 5) {
         let boostQuantity = Math.abs(SuppliersQuantity - scrollQuantity - 1 - 4);
         let boostDOM = document.createElement('li');
