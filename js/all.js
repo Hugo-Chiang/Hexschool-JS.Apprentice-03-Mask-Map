@@ -194,8 +194,9 @@ function selectedCounty() {
 function selectedDistrict() {
     filterList.innerHTML = '';
 
+    let selectedCounty = countySelection.value;
     let selectedDistrict = districtSelection.value;
-    updateSuppliersList(selectedDistrict);
+    updateSuppliersList(selectedCounty, selectedDistrict);
 
     sortFilterList('不指定', selectedSuppliersArr);
 
@@ -203,13 +204,14 @@ function selectedDistrict() {
 }
 
 // 函式：根據所選行政區更新所選供應商清單
-function updateSuppliersList(district) {
+function updateSuppliersList(county, district) {
     selectedSuppliersArr = [];
 
     for (let i = 0; i < resArr.length; i++) {
-        let town = resArr[i].properties.town;
+        let resTown = resArr[i].properties.town;
+        let resCounty = resArr[i].properties.county;
 
-        if (district == town) {
+        if (district == resTown && county == resCounty) {
             let selectedSupplier = {
                 supplierLatitude: resArr[i].geometry.coordinates[1],
                 supplierLongitude: resArr[i].geometry.coordinates[0],
@@ -260,7 +262,7 @@ function selectedMarker(e) {
                 countySelection.value = resArr[i].properties.county;
                 renderDistrictSelection();
                 districtSelection.value = resArr[i].properties.town;
-                updateSuppliersList(districtSelection.value);
+                updateSuppliersList(countySelection.value, districtSelection.value);
                 let sortedArr = sortFilterList('不指定', selectedSuppliersArr);
 
                 backgroudMap.setView([resArr[i].geometry.coordinates[1], resArr[i].geometry.coordinates[0]], 18);
